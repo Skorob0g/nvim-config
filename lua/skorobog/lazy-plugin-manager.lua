@@ -104,11 +104,12 @@ require("lazy").setup({
 			capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
 			local servers = {
-				-- clangd = {},
+				clangd = {},
 				-- gopls = {},
 				pyright = {},
 				ansiblels = {},
-				bashls = {}
+				bashls = {},
+				jsonnet_ls = {}
 				-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 			}
 
@@ -153,6 +154,9 @@ require("lazy").setup({
 					['<C-b>'] = cmp.mapping.scroll_docs(-4),
 					['<C-f>'] = cmp.mapping.scroll_docs(4),
 				},
+                sources = {
+                    { name = 'nvim_lsp' }
+                }
 		}
 		end,
 	},
