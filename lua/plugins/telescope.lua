@@ -8,7 +8,6 @@ return {
             -- checks if make is installed on my computer
             -- originally was a function, but seems to also work like this
             cond = vim.fn.executable 'make' == 1
-
         }
     },
 }

@@ -1,4 +1,4 @@
 require('options')
 require('lazy-pm')
-require('remaps')
+require('plugin-configs')
 
