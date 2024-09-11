@@ -3,5 +3,7 @@ require('nvim-treesitter.configs').setup{
         'c', 'go', 'python', 'lua',
         'yaml', 'json', 'helm',
         'make'
-    }
+    },
+    highlight = {enable = true},
+    indent = {enable = true}
 }

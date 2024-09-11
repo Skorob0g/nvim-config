@@ -68,21 +68,22 @@ capabilities = vim.tbl_deep_extend(
 )
 
 local servers = {
-    clangd = {},
-    gopls = {},
-    pyright = {},
-    lua_ls = {},
-    ansiblels = {},
-    bashls = {},
-    dockerls = {},
-    helm_ls = {},
+    'clangd',
+    'gopls',
+    'pyright',
+    'lua_ls',
+    'ansiblels',
+    'bashls',
+    'dockerls',
+    'helm_ls',
+    'sonarlint-language-server',
 
     -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 }
 
 -- Ensure the servers and tools above are installed
 require('mason').setup()
-require('mason-tool-installer').setup { ensure_installed = vim.tbl_keys(servers) }
+require('mason-tool-installer').setup { ensure_installed = servers }
 require('mason-lspconfig').setup {
     handlers = {
         function(server_name)
@@ -94,4 +95,20 @@ require('mason-lspconfig').setup {
             require('lspconfig')[server_name].setup(server)
         end,
     },
+}
+
+-- Setup for helm
+
+vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
+    pattern = '*/templates/*.yaml',
+    callback = function()
+        vim.bo.filetype='helm'
+    end
+})
+
+local lspconfig = require('lspconfig')
+lspconfig.helm_ls.setup{
+    cmd = { '/home/antonskorobogatov/.local/share/nvim/mason/bin/helm_ls', 'serve'},
+    filetypes = { 'helm' },
+    root_dir = lspconfig.util.root_pattern('Chart.yaml'),
 }
