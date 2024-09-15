@@ -72,6 +72,7 @@ local servers = {
     'gopls',
     'pyright',
     'lua_ls',
+    'ansible-lint',
     'ansiblels',
     'bashls',
     'dockerls',
@@ -128,3 +129,21 @@ vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
         vim.bo.filetype='dockerfile'
     end
 })
+
+-- Setup for ansible
+
+vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
+    pattern = {'*.yaml'},
+    callback = function()
+        local chart_root = lspconfig.util.root_pattern('ansible.cfg')(vim.fn.expand('%:p'))
+        if chart_root then
+            vim.bo.filetype='ansible'
+        end
+    end
+})
+
+lspconfig.ansiblels.setup{
+    cmd = { vim.fn.stdpath('data') .. '/mason/bin/ansible-language-server', '--stdio'},
+    filetypes = { 'ansible' },
+    root_dir = lspconfig.util.root_pattern('ansible.cfg'),
+}
