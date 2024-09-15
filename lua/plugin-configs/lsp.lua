@@ -99,16 +99,32 @@ require('mason-lspconfig').setup {
 
 -- Setup for helm
 
+local lspconfig = require('lspconfig')
+
 vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
-    pattern = '*/templates/*.yaml',
+    pattern = {'*.yaml'},
     callback = function()
-        vim.bo.filetype='helm'
+        -- root_pattern returns a function that looks for a given pattern
+        -- now we need to tell this function from where to start looking 
+        local chart_root = lspconfig.util.root_pattern('Chart.yaml')(vim.fn.expand('%:p'))
+        if chart_root then
+            vim.bo.filetype='helm'
+        end
     end
 })
 
-local lspconfig = require('lspconfig')
 lspconfig.helm_ls.setup{
-    cmd = { '/home/antonskorobogatov/.local/share/nvim/mason/bin/helm_ls', 'serve'},
+    cmd = { vim.fn.stdpath('data') .. '/mason/bin/helm_ls', 'serve'},
     filetypes = { 'helm' },
     root_dir = lspconfig.util.root_pattern('Chart.yaml'),
 }
+
+
+-- Setup for dockerfile
+
+vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
+    pattern = {'Dockerfile*'},
+    callback = function()
+        vim.bo.filetype='dockerfile'
+    end
+})
