@@ -78,6 +78,7 @@ local servers = {
     'dockerls',
     'helm_ls',
     'sonarlint-language-server',
+    'typescript-language-server',
 
     -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 }
@@ -147,3 +148,16 @@ lspconfig.ansiblels.setup{
     filetypes = { 'ansible' },
     root_dir = lspconfig.util.root_pattern('ansible.cfg'),
 }
+
+-- lspconfig['sonarlint-language-server'].setup({
+--     server = {
+--         cmd = {
+--             vim.fn.stdpath('data') .. '/mason/bin/sonarlint-language-server' , '-stdio', '-analyzers',
+--             vim.fn.expand(vim.fn.stdpath('data') .. '/mason/share/sonarlint-analyzers/sonarpython.jar')
+--         }
+--     },
+--     filetypes = {'python'},
+-- })
+
+-- print(vim.pretty_print(lspconfig))
+
