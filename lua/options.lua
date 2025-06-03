@@ -5,6 +5,10 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.mouse = ''
 
+-- Colours after nvim v0.10
+vim.opt.termguicolors = false
+vim.cmd("colorscheme vim")
+
 -- General indenting
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
