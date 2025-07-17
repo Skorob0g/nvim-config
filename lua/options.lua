@@ -5,6 +5,9 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.mouse = ''
 
+-- Default file browser to tree view
+vim.g.netrw_liststyle = 3
+
 -- Colours after nvim v0.10
 vim.opt.termguicolors = false
 vim.cmd("colorscheme vim")
