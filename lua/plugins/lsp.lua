@@ -5,5 +5,6 @@ return {
         'williamboman/mason-lspconfig.nvim', -- (?) marries the two above together
         'WhoIsSethDaniel/mason-tool-installer.nvim',
         {'j-hui/fidget.nvim', opts = {}},
+        {'vigoux/ltex-ls.nvim'}
     },
 }

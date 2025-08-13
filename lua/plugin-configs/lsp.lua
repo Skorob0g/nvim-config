@@ -79,6 +79,7 @@ local servers = {
     'helm_ls',
     'sonarlint-language-server',
     'typescript-language-server',
+    'ltex-ls',
 
     -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 }
@@ -87,16 +88,7 @@ local servers = {
 require('mason').setup()
 require('mason-tool-installer').setup { ensure_installed = servers }
 require('mason-lspconfig').setup {
-    handlers = {
-        function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-        end,
-    },
+    automatic_enable = {exclude = {'ltex'}},
 }
 
 -- Setup for helm
@@ -147,6 +139,38 @@ lspconfig.ansiblels.setup{
     cmd = { vim.fn.stdpath('data') .. '/mason/bin/ansible-language-server', '--stdio'},
     filetypes = { 'ansible' },
     root_dir = lspconfig.util.root_pattern('ansible.cfg'),
+}
+
+-- if adding a new word to dictionary does not work, check if this was merged
+-- https://github.com/vigoux/ltex-ls.nvim/pull/11
+require 'ltex-ls'.setup {
+    settings = {
+        ltex = {
+            dictionary = (function()
+                -- For dictionary, search for files in the runtime to have
+                -- and include them as externals the format for them is
+                -- dict/{LANG}.txt
+                --
+                -- Also add dict/default.txt to all of them
+                local files = {}
+                for _, file in ipairs(vim.api.nvim_get_runtime_file("dict/*", true)) do
+                  local lang = vim.fn.fnamemodify(file, ":t:r")
+                  local fullpath = vim.fs.normalize(file, ":p")
+                  files[lang] = { ":" .. fullpath }
+                end
+
+                if files.default then
+                  for lang, _ in pairs(files) do
+                    if lang ~= "default" then
+                      vim.list_extend(files[lang], files.default)
+                    end
+                  end
+                  files.default = nil
+                end
+                return files
+          end)(),
+        }
+    }
 }
 
 -- lspconfig['sonarlint-language-server'].setup({
