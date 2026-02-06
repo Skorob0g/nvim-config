@@ -80,6 +80,9 @@ local servers = {
     'sonarlint-language-server',
     'typescript-language-server',
     'ltex-ls',
+    -- 'ruby-lsp',
+    'solargraph',
+    'terraform-ls',
 
     -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 }
@@ -88,7 +91,7 @@ local servers = {
 require('mason').setup()
 require('mason-tool-installer').setup { ensure_installed = servers }
 require('mason-lspconfig').setup {
-    automatic_enable = {exclude = {'ltex'}},
+    automatic_enable = {exclude = {'ltex', 'terraform'}},
 }
 
 -- Setup for helm
@@ -107,11 +110,11 @@ vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
     end
 })
 
-lspconfig.helm_ls.setup{
+vim.lsp.enable('helm_ls', {
     cmd = { vim.fn.stdpath('data') .. '/mason/bin/helm_ls', 'serve'},
     filetypes = { 'helm' },
     root_dir = lspconfig.util.root_pattern('Chart.yaml'),
-}
+})
 
 
 -- Setup for dockerfile
@@ -172,6 +175,15 @@ require 'ltex-ls'.setup {
         }
     }
 }
+
+-- Terraform
+vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
+    pattern = {'*.tf'},
+    callback = function()
+        vim.bo.filetype='terraform'
+    end
+})
+
 
 -- lspconfig['sonarlint-language-server'].setup({
 --     server = {
