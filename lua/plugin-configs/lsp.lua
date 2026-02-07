@@ -81,7 +81,7 @@ local servers = {
     'typescript-language-server',
     'ltex-ls',
     -- 'ruby-lsp',
-    'solargraph',
+    -- 'solargraph',
     'terraform-ls',
 
     -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
